@@ -68,7 +68,7 @@ class TortoiseCRUDRouter(CRUDGenerator[SCHEMA]):
         return route
 
     def _get_one(self, *args: Any, **kwargs: Any) -> CALLABLE:
-        async def route(item_id: int) -> Model:
+        async def route(item_id: str) -> Model:
             model = await self.db_model.filter(id=item_id).first()
 
             if model:
@@ -89,7 +89,7 @@ class TortoiseCRUDRouter(CRUDGenerator[SCHEMA]):
 
     def _update(self, *args: Any, **kwargs: Any) -> CALLABLE:
         async def route(
-            item_id: int, model: self.update_schema  # type: ignore
+            item_id: str, model: self.update_schema  # type: ignore
         ) -> Model:
             await self.db_model.filter(id=item_id).update(
                 **model.dict(exclude_unset=True)
@@ -106,7 +106,7 @@ class TortoiseCRUDRouter(CRUDGenerator[SCHEMA]):
         return route
 
     def _delete_one(self, *args: Any, **kwargs: Any) -> CALLABLE:
-        async def route(item_id: int) -> Model:
+        async def route(item_id: str) -> Model:
             model: Model = await self._get_one()(item_id)
             await self.db_model.filter(id=item_id).delete()
 
